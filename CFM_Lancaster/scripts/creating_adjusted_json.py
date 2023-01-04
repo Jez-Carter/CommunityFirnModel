@@ -1,0 +1,107 @@
+import json
+from src.paths import repo_path
+
+cfm_main_path = f'{repo_path}CFM_main/'
+out_path = f'{repo_path}CFM_Lancaster/json_files/'
+
+with open(f"{cfm_main_path}example.json", "r") as read_file: 
+    example_json = json.load(read_file)
+
+example_json['InputFileFolder'] = 'path'
+example_json['InputFileNameTemp'] = '?.csv'
+example_json['InputFileNamebdot'] = '?.csv'
+example_json['InputFileNameIso'] = '?.csv'
+example_json['InputFileNamerho'] = '?.csv'
+example_json['InputFileNamemelt'] = '?.csv'
+example_json['InputFileNameStrain'] = '?.csv'
+example_json['InputFileNameSublim'] = '?.csv'
+example_json['InputFileNameRain'] = '?.csv'
+example_json['resultsFolder'] = '?'
+example_json['resultsFileName'] = '?.csv'
+example_json['spinFileName'] = '?.csv'
+
+example_json['initfirnFile'] = '?.csv' #File containing initial conditions if you are using firn measurements/data (e.g. temperature, density) to begin the model run.
+example_json['initprofile'] = False # Whether or not the CFM should use the initfirnFile to generate an initial condition.
+example_json['input_type'] =  "csv" #(New in version 1.1.0) Specify what type of inputs you want to use - .csv (historic behavior) or pandas dataframe that is stored in a pickle.
+example_json['DFresample'] =  "?" # (New in version 1.1.0) Specify the resolution you want for your model run, which will be the resample interval for the dataframe (this only has functionality when input_type is dataframe) See https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Timedelta.html
+example_json['DFfile'] =  "path.pkl" # The filename of the pickle containing the climate dataframe.
+example_json['physRho'] =  "KuipersMunneke2015" # The firn-densification physics to use for the model run.
+example_json['MELT'] =  False # Whether or not to include meltwater percolation physics in the model run.
+example_json['RAIN'] =  False # Whether or not to include rainfall in the model run.
+example_json['ReehCorrectedT'] =  False #If melt is enabled, (NEED TO FILL IN WHAT THIS DOES)
+example_json['FirnAir'] =  False # Whether or not to run the firn air module with the model run.
+example_json['AirConfigName'] =  "?.json" # Name of the .json configuration files that contains the parameters for the firn air module.
+example_json['TWriteInt'] =  1 # How often to write the results to file, relative to the time-step size, i.e. 1 will write at every time step, 10 will write at every 10th time step, etc.
+example_json['TWriteStart'] =  1980 #The time at which to start saving model results. The time is model time, so must correspond to the time in the input forcing files.
+example_json['int_type'] =  "nearest" # How to interpolate from the input file times to the model time. Use linear e.g. if you have sparse ice core climate data. Use nearest e.g. if you have monthly climate data and want to take monthly time steps (the model time may not be exactly the same as the input time).
+example_json['SeasonalTcycle'] =  False # Whether or not to add a seasonal temperature cycle (on top of the forcing data). Use this only if you are using sub-annual time steps and your forcing data does not have a seasonal cycle already. Usually this would be if your forcing data is annual (or coarser resolution).
+example_json['SeasonalThemi'] =  "?" # If ‘SeasonalTCycle’ is True, specify which hemisphere you are modeling to get the summer/winter timing correct.
+example_json['coreless'] =  False # If ‘SeasonalTCycle’ is True, add the coreless winter. ADD MORE INFO HERE
+example_json['TAmp'] =  1 # If ‘SeasonalTCycle’ is True, specify the amplitude of the cycle.
+example_json['physGrain'] =  False # Whether or not to track grain size evolution. Must be True for Arthern2010S physics.
+example_json['calcGrainSize'] =  False # True uses a parameterization to get a surface grain-size at each time step, and False uses a set grain size at the surface.
+example_json['GrGrowPhysics'] =  "?" # Which equation to use to calculate grain size evolution.
+example_json['heatDiff'] =  True # Whether or not to include heat diffusion.
+example_json['conductivity'] =  "Calonne2019" # Which parameterization for heat conductivity to use.
+example_json['variable_srho'] =  False # Whether to vary the surface density through time. False uses a constant density.
+example_json['srho_type'] =  "userinput" # If variable_srho is true, how to vary the surface density through time. ‘userinput’ uses a csv file with surface density though time (must be specified with InputFileNamerho); ‘param’ uses a parametization; ‘noise’ adds noise at each time step to the value specified by rhos0.
+example_json['rhos0'] =  350 # Surface density at each time step if using a constant surface density, or the mean value if variable_srho is true and srho_type is ‘noise’.
+example_json['r2s0'] =  1e-8 # Surface grain size at each time step if calcGrainSize is false.
+example_json['AutoSpinUpTime'] =  False # Calculate the spin up time automatically based on the input accumulation rate and specified model domain depth; should be long enough to refresh the entire firn column during spin up.
+example_json['yearSpin'] =  1 # How many years to spin up for. COULD EXPAND ON THIS
+example_json['stpsPerYear'] =  12 # How many time steps per year to take. E.g. 12 will make the model take monthly time steps, 1 will give annual time stepping. Take care to coordinate this value with your input files and the ‘int_type’.
+example_json['H'] =  3000 # Thickness of the ice sheet in meters. This is a bit confusing. Probably keep it at 3000 or so. That would mean the surface of the firn is 3000 m above the bed.
+example_json['HbaseSpin'] =  2900 #The elevation of the bottom of the model domain above the bed. So, if you want to model to 250 m depth, and H is 3000, HbaseSpin will be 2750. Likewise, if you wanted to model just the top 50 m of firn, HbaseSpin will be 2950 (assuming H is 3000). This is an initial value at the start of the spin up. The depth of the model domain will change due to the fact the model is Lagrangian with a fixed number of nodes; e.g. if the accumulation rate increases, each node will be thicker, and the base of the domain will be deeper.
+example_json['D_surf'] =  1 # The CFM features a generic layer tracker called D_con; it can be used for a number of things. This is the value to assign a new layer at the surface at each time step.
+example_json['bdot_type'] =  "mean" # The type of accumulation rate to use for the densification physics. ‘Instant’ is the instantaneous value (i.e. at that time step) of accumulation, ‘mean’ is the mean accumulation over the lifetime of a parcel of firn. (‘Stress’ is in progress and will use the stress directly).
+example_json['grid_outputs'] =  False # Whether or not to put the outputs on a regular grid (i.e. evenly spaced vs. the internal variable grid)
+example_json['grid_output_res'] =  "?" # If grid_output is True, this is the spacing of the grid nodes in meters.
+example_json['isoDiff'] =  False # Whether or not to include water isotope diffusion in the model run.
+example_json['iso'] =  "?" # If isoDiff is true, which isotopes to model. ‘NoDiffusion’ will include the isotopes but does not diffuse them at each time step to allow analysis of the effects of advection and compaction alone (it uses the d18O forcing).
+example_json['spacewriteint'] =  1 #NOT WORKING CURRENTLY. Spatial resolution interval to save to results. 1 is every node; 2 is every other, etc.
+example_json['horizontal_divergence'] =  False # ?
+example_json['strain_softening'] =  False # ?
+example_json['tuning_bias_correction'] =  False # ?
+example_json['residual_strain'] =  0.0002 # ?
+# example_json['strain'] =  False # Whether or not to include layer thinning due to horizontal strain from dynamic ice sheet/glacier flow.
+# example_json['du_dx'] =  "?" # If strain is true, this is the horizontal strain rate. Future work will allow this to vary in time. NEED TO CHECK UNITS ARE CORRECT.
+example_json['outputs'] =  ['density','depth'] # Which outputs to save.
+example_json['doublegrid'] =  False # Whether or not to use the feature that keeps a high-resolution grid near the surface and a lower-resolution grid at greater depth.
+example_json['nodestocombine'] =  10 # If doublegrid is True, this is how many nodes are combined into a single node at the high/low resolution boundary. So, if it is 50, at every 50th time steps 50 nodes will be combined into a single node.
+example_json['multnodestocombine'] =  10 # If doublegrid is True, this is how many nodes are combined into a single node at the boundary between the low and very low resolution grid. For example, if nodestocombine is 50, multnodes will combine ‘multnodestocombine’ of those 50-node thick layers into a single node.
+example_json['grid1bottom'] =  1 # If doublegrid is True, the depth (m) at which the high-resolution grid nodes are combined.
+example_json['grid2bottom'] =  10 # If doublegrid is True, the depth (m) at which the low-resolution grid nodes are combined to make the very-low resolution grid.
+example_json['spinup_climate_type'] =  "mean" # What climate to use for the spin up. ‘initial’ uses the very first value in the input .csv files and ‘mean’ uses the mean of the values in those files.
+example_json['manual_climate'] =  False # Manually specify the background climate (long-term means). This is useful if you are doing a very short model run, in which the input csv files may not be representative of the long-term climate.
+example_json['deepT'] =  "?" #If manual_climate is true, this is the long term site temperature (the temperature that would be measured at the bottom of a borehole).
+example_json['bdot_long'] =  "?" # If manual_climate is true, this is the long-term mean accumulation rate.
+example_json['manual_iceout'] =  False # Allows the user to specify the ice that is effectively removed from the bottom of the firn due to ice sheet thinning from ice flow. In steady state, iceout is the same as the long-term ice equivalent accumulation rate (and that is what is used if manual_iceout is false).
+example_json['iceout'] =  "?" # If manual_iceout is True, this is the value.
+example_json['QMorris'] =  "?" # The Morris and Wingham (2014) model allows for different activation energies; specify it here.
+example_json['timesetup'] =  "interp" # How to set up the time step size. ‘Exact’ uses the input files to find the times at which a time step occurs and the corresponding time-step size dt; ‘interp’ uses a uniform dt and interpolates the input data onto the timeline that the model generates with uniform time steps. ‘retmip’ is a specialty for the RETMIP experiment and may not be fully functional.
+example_json['liquid'] =  "bucket" #If MELT is true, which percolation scheme to use.
+example_json['merging'] =  False # If a model volume gets too thin, merge it with another. Needed for numerical stability with melt schemes.
+example_json['merge_min'] =  1e-9 # If merging is true, the thickness threshold at which merging should occur.
+example_json['LWCcorrect'] =  False # ?
+example_json['manualT'] =  False # Option to use manual temperature measurements, e.g. from a thermistor string.
+example_json['no_densification'] =  False # Option to set densification to false (perhaps you are simulating temperature diffusion in a core in a lab)
+example_json['rad_pen'] =  False # Option to turn on radiation penetration module.
+example_json['site_pressure'] =  "?" # Set the pressure at the site, which can affect isotope diffusion.
+example_json['output_bits'] =  "float32" # Set the bits for the outputs.
+example_json['spinUpdate'] =  False # Specify if you want to update the spin file at some date.
+example_json['spinUpdateDate'] =  "?" # Specify the date at which to update the spin file. should correspond to the start of your reference climate interval.
+example_json['DIPhorizon'] =  100 # Depth horizon at which to calculate DIP/FAC (because the bottom of the domain varies a bit).
+example_json['NewSpin'] =  False # Whether or not to perform a new spin up (if the spin file exists already.)[Needed for new double grid to work.]
+example_json['ColeouLesaffre'] =  False # ?
+example_json['IrrVal'] =  0.02 # ?
+example_json['RhoImp'] =  830 # ?
+example_json['DownToIce'] =  False # ?
+example_json['ThickImp'] =  0.1 # ?
+example_json['Ponding'] =  False # ?
+example_json['DirectRunoff'] =  0 # ?
+example_json['RunoffZuoOerlemans'] =  False # ?
+example_json['Slope'] =  0.1 # ?
+example_json['SUBLIM'] =  False # ?
+
+with open(f'{out_path}adjusted.json', 'w') as json_file:
+    json.dump(example_json, json_file, indent=0)

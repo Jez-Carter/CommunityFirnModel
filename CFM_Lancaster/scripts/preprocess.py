@@ -7,19 +7,14 @@ import pandas as pd
 import xarray as xr
 from pyproj import CRS 
 from pyproj import Transformer
-# import pyproj
-# pyproj.datadir.set_data_dir('/home/jez/anaconda3/envs/CFM/share/proj')
 from src.helper_functions import toYearFraction
-from src.
-
-luna_path = '~'
+from src.paths import racmo_raw_data_path,processed_data_path
 
 variables = ['snowfall','precip','tskin','snowmelt']
 racmo_years = [1957,1961,1971,1981,1991,2001,2011]
-RACMO_dir = "/home/jez/DSNE_ice_sheets/Community_Firn_Model/Raw_Data/RACMO/"
 t_frequency = "Daily/"#"daily/"#3hourly
 
-ds = xr.open_dataset(f"{RACMO_dir}{t_frequency}{variables[0]}{racmo_years[0]}.nc")
+ds = xr.open_dataset(f"{racmo_raw_data_path}{t_frequency}{variables[0]}{racmo_years[0]}.nc")
 coords_da = ds.isel(height=0,nblock1=0,nblock2=0,time=0,bnds=0).rotated_pole
 rotated_coord_system = CRS(coords_da.proj_parameters)
 
@@ -45,7 +40,7 @@ for variable in variables:
     print(variable)
     collected_years = []
     for racmo_year in racmo_years:
-        da = xr.open_dataset(f"{RACMO_dir}{t_frequency}{variable}{racmo_year}.nc")[variable].isel(height=0)
+        da = xr.open_dataset(f"{racmo_raw_data_path}{t_frequency}{variable}{racmo_year}.nc")[variable].isel(height=0)
         stations_da = da.sel(rlat=station_rlats_da, rlon=station_rlons_da, method="nearest")
         collected_years.append(stations_da)
     combined_years_da = xr.concat(collected_years, dim="time")
@@ -75,8 +70,7 @@ dates = pd.DatetimeIndex(stations_ds.time.data)
 year = np.array([toYearFraction(i) for i in dates])
 stations_ds = stations_ds.assign_coords({"year": ("time", year)})
 
-stations_ds.to_netcdf("/home/jez/DSNE_ice_sheets/Community_Firn_Model/Processed_Data/stations_ds.nc")
-stations_ds.to_netcdf("/home/jez/Community_Firn_Model/data/PreProcessed/stations_ds.nc")
+stations_ds.to_netcdf(f'{processed_data_path}stations_ds.nc')
 
 print("Time Taken:", timeit.default_timer() - starttime)
 
