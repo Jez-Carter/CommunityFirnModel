@@ -15,9 +15,12 @@ for station in stations:
     year_data = ds.isel(cell=0).depth.data
     ds = ds.assign_coords(year = ('time',year_data))
     ds = ds.isel(cell=slice(1,None))
-    ds["cum_ele"]=ds.DIP[:,6]
-    ds["delta_ele"]=ds.DIP[:,5]
-    ds["tot_compaction"]=ds.compaction.sum('cell')
+    # ds["cum_ele"]=ds.DIP[:,6]
+    # ds["delta_ele"]=ds.DIP[:,5]
+    ds["cum_ele"]=ds.DIP[:,3]
+    ds["delta_ele"]=ds.DIP[:,2]
+    ds["tot_compaction"]=ds.DIP[:,4]
+    # ds["tot_compaction"]=ds.compaction.sum('cell')
     ds["cum_tot_compaction"]=ds.tot_compaction.cumsum('time')
 
     ds[['depth','density']].to_netcdf(f"{results_folder}Reformatted_Results_{station}.nc")

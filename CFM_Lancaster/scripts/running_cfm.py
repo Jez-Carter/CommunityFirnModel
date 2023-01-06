@@ -25,10 +25,10 @@ for station in stations:
     adjusted_json['spinFileName'] = f'Spin_{station}.hdf5'
 
     adjusted_json['physRho'] = 'KuipersMunneke2015'
-    adjusted_json['TWriteStart'] = 1960.0 
+    adjusted_json['TWriteStart'] = 1860.0 
     adjusted_json['outputs'] = ['depth','density','DIP','climate','compaction']
     adjusted_json['HbaseSpin'] = adjusted_json['H']-100
-    adjusted_json['yearSpin'] =  0.1
+    adjusted_json['yearSpin'] =  10#0.1
     adjusted_json['NewSpin'] = True
     adjusted_json['stpsPerYear'] =  12
     adjusted_json['MELT'] =  True 

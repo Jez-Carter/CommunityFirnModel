@@ -938,6 +938,8 @@ class FirnDensityNoSpin:
             self.sdz_old    = np.sum(self.dz) # old total column thickness (s for sum)
             self.z_old      = np.copy(self.z)
             self.dz         = self.mass / self.rho * self.dx # new dz after compaction
+            #BUG - Had to insert the below lines for correct calculation of compaction
+            self.sdz_comp    = np.sum(self.dz) # total column thickness after compaction
             
             if self.THist:
                 self.Hx = RD['Hx']
@@ -1399,7 +1401,9 @@ class FirnDensityNoSpin:
         
         self.dHAllcorr.append(self.dHcorr)
         self.dHtotcorr = np.sum(self.dHAllcorr)
-        self.comp_firn = self.sdz_new - self.sdz_old #total compaction of just the firn during the previous time step
+        #BUG I think the current calc for comp_firn is wrong so I've commented and adjusted (see line 940 also).
+        # self.comp_firn = self.sdz_new - self.sdz_old #total compaction of just the firn during the previous time step
+        self.comp_firn = self.sdz_comp - self.sdz_old
 
         return self.dH, self.dHtot, self.comp_firn, self.dHcorr, self.dHtotcorr
 
