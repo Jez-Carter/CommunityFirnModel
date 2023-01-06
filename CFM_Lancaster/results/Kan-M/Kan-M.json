@@ -41,7 +41,7 @@
 "FirnAir": false,
 "AirConfigName": "?.json",
 "TWriteInt": 1,
-"TWriteStart": 1960.0,
+"TWriteStart": 1860.0,
 "int_type": "nearest",
 "int_type_options": [
 "nearest",
@@ -85,7 +85,7 @@
 "rhos0": 350,
 "r2s0": 1e-08,
 "AutoSpinUpTime": false,
-"yearSpin": 0.1,
+"yearSpin": 10,
 "H": 3000,
 "HbaseSpin": 2900,
 "stpsPerYear": 12,
