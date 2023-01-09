@@ -1,5 +1,5 @@
 {
-"InputFileFolder": "/home/jez/Community_Firn_Model_Forked/CommunityFirnModel/CFM_Lancaster/data/cfm_input/",
+"InputFileFolder": "/home/jez/Community_Firn_Model_Forked/CFM_Lancaster/data/cfm_input/",
 "InputFileNameTemp": "Summit_tskin.csv",
 "InputFileNamebdot": "Summit_snowfall.csv",
 "InputFileNameIso": "?.csv",
@@ -8,7 +8,7 @@
 "InputFileNameStrain": "?.csv",
 "InputFileNameSublim": "?.csv",
 "InputFileNameRain": "Summit_rainfall.csv",
-"resultsFolder": "/home/jez/Community_Firn_Model_Forked/CommunityFirnModel/CFM_Lancaster/results/Summit",
+"resultsFolder": "/home/jez/Community_Firn_Model_Forked/CFM_Lancaster/results/Summit",
 "initfirnFile": "?.csv",
 "initprofile": false,
 "input_type": "csv",

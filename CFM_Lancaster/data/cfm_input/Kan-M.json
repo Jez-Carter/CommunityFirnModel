@@ -1,5 +1,5 @@
 {
-"InputFileFolder": "/home/jez/Community_Firn_Model_Forked/CommunityFirnModel/CFM_Lancaster/data/cfm_input/",
+"InputFileFolder": "/home/jez/Community_Firn_Model_Forked/CFM_Lancaster/data/cfm_input/",
 "InputFileNameTemp": "Kan-M_tskin.csv",
 "InputFileNamebdot": "Kan-M_snowfall.csv",
 "InputFileNameIso": "?.csv",
@@ -8,7 +8,7 @@
 "InputFileNameStrain": "?.csv",
 "InputFileNameSublim": "?.csv",
 "InputFileNameRain": "Kan-M_rainfall.csv",
-"resultsFolder": "/home/jez/Community_Firn_Model_Forked/CommunityFirnModel/CFM_Lancaster/results/Kan-M",
+"resultsFolder": "/home/jez/Community_Firn_Model_Forked/CFM_Lancaster/results/Kan-M",
 "initfirnFile": "?.csv",
 "initprofile": false,
 "input_type": "csv",
