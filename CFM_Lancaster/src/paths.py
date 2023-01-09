@@ -1,6 +1,6 @@
 base_path = '/home/jez/'
 luna_path = f'{base_path}DSNE_ice_sheets/Community_Firn_Model/'
-repo_path = f'{base_path}Community_Firn_Model_Forked/CommunityFirnModel/'
+repo_path = f'{base_path}Community_Firn_Model_Forked/'
 racmo_raw_data_path = f'{luna_path}Raw_Data/RACMO/'
 processed_data_path = f'{luna_path}Processed_Data/'
 imau_path = f'{luna_path}IMAU_Data/FDM_zs_FGRN11_1960-2016.nc'

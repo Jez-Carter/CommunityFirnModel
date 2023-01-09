@@ -27,16 +27,15 @@ def resample_to_monthly(ds):
     ds = ds.assign_coords(year=("time", resampled_year_data))
     return(ds)
 
-def create_spin(ds, intitial_years_for_spinup):
-    min_year = ds.year.min()
-    ds_monthly_spin = ds.where((min_year<=ds.year)&(ds.year<=min_year+intitial_years_for_spinup),drop=True)
+def create_spin(ds, ref_period_start,ref_period_end):
+    ds_spin = ds.sel(time=slice(ref_period_start,ref_period_end))
 
-    time_interval = ds_monthly_spin['time'][1]-ds_monthly_spin['time'][0]
-    time_range = ds_monthly_spin['time'][-1]-ds_monthly_spin['time'][0]
-    ds_monthly_spin['time'] = ds_monthly_spin['time'] - time_range - time_interval
+    time_interval = ds_spin['time'][1]-ds_spin['time'][0]
+    time_shift = ds_spin['time'][-1]-ds['time'][0]
+    ds_spin['time'] = ds_spin['time'] - time_shift - time_interval
+    
+    year_interval = ds_spin['year'][1]-ds_spin['year'][0]
+    year_shift = ds_spin['year'][-1]-ds['year'][0]
+    ds_spin['year'] = ds_spin['year'] - year_shift - year_interval
 
-    year_interval = ds_monthly_spin['year'][1]-ds_monthly_spin['year'][0]
-    year_range = ds_monthly_spin['year'][-1]-ds_monthly_spin['year'][0]
-    ds_monthly_spin['year'] = ds_monthly_spin['year'] - year_range - year_interval
-
-    return(ds_monthly_spin)
+    return(ds_spin)

@@ -1386,8 +1386,10 @@ class FirnDensityNoSpin:
         '''
         updates the surface elevation change
         '''
-
+        #BUG I think the below is wrong so I've commented and replaced.
         self.dH     = (self.sdz_new - self.sdz_old) + self.dh_acc + self.dh_melt - (self.iceout*self.t[iii]) # iceout has units m ice/year, t is years per time step. 
+        # self.dH     = (self.sdz_new - self.sdz_old) + self.dh_acc - (self.iceout*self.t[iii])# + self.dh_melt - (self.iceout*self.t[iii]) # iceout has units m ice/year, t is years per time step. 
+        # self.dH = self.z[-1] - self.z_old[-1] #- (self.iceout*self.t) # alternative method. Should be the same?    
         # self.dH2 = self.z[-1] - self.z_old[-1] #- (self.iceout*self.t) # alternative method. Should be the same?    
         self.dHAll.append(self.dH)
         self.dHtot  = np.sum(self.dHAll)
@@ -1397,8 +1399,11 @@ class FirnDensityNoSpin:
         ### domain and the 917 density horizon.
 
         iceout_corr = self.iceout*RHO_I/self.rho[-1]
-        self.dHcorr = (self.sdz_new - self.sdz_old) + self.dh_acc + self.dh_melt - (iceout_corr*self.t[iii]) # iceout has units m ice/year, t is years per time step. 
-        
+        # self.dHcorr = (self.sdz_new - self.sdz_old) + self.dh_acc + self.dh_melt - (iceout_corr*self.t[iii]) # iceout has units m ice/year, t is years per time step. 
+        #BUG Same as above
+        # self.dHcorr = (self.sdz_new - self.sdz_old) + self.dh_acc - (iceout_corr*self.t[iii]) # iceout has units m ice/year, t is years per time step. 
+        self.dHcorr = self.z[-1] - self.z_old[-1]
+
         self.dHAllcorr.append(self.dHcorr)
         self.dHtotcorr = np.sum(self.dHAllcorr)
         #BUG I think the current calc for comp_firn is wrong so I've commented and adjusted (see line 940 also).

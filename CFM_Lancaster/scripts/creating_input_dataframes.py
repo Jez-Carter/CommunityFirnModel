@@ -12,12 +12,22 @@ ds = resample_to_monthly(ds)
 
 #NOTE One unfortunate limitation of using datetime64[ns] is that it limits the native representation of dates to those that fall between the years 1678 and 2262.
 #NOTE See https://docs.xarray.dev/en/stable/user-guide/time-series.html for how this impacts xarray - essentially if we go back further than 1678 the time coordinate values behave strangely.
-intitial_years_for_spinup = 10
-repeated_spinups = 5#25
+
+start_time,end_time = '1960-01-01', '2016-12-31'
+ref_period_start,ref_period_end = '1960-01-01', '1980-01-01'
+repeated_spinups = 5# 5 repeated spinups of 20 years would be 100years of spinup 
+
+ds = ds.sel(time=slice(start_time,end_time))
 
 for i in range(repeated_spinups):
-    ds_spin = create_spin(ds,intitial_years_for_spinup)
+    ds_spin = create_spin(ds, ref_period_start,ref_period_end)
     ds = xr.concat([ds_spin,ds],dim='time')
+    ds = ds.sortby('time')
+
+###### Doubling non spinup melt
+#NOTE This is for a test and needs deleting at some point.
+ds.snowmelt.loc[dict(time=slice(start_time,end_time))] = ds.snowmelt.sel(time=slice(start_time,end_time))*2
+######
 
 stations = ds.station.data
 variables = list(ds.keys())
