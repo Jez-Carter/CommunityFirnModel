@@ -446,9 +446,13 @@ class FirnDensityNoSpin:
                 print('Ensure that your iceout value has units m ice eq. per year!')
             else:
                 if self.c['SUBLIM']:
-                    self.iceout = np.mean(self.bdot+self.sublim) # this is the rate of ice flow advecting out of the column, units m I.E. per year.
+                    # self.iceout = np.mean(self.bdot+self.sublim) # this is the rate of ice flow advecting out of the column, units m I.E. per year.
+                #BUG
+                    self.iceout = np.mean(self.bdot)#+self.sublimsec) # this is the rate of ice flow advecting out of the column, units m I.E. per year.
+                    print(f'Iceout:{self.iceout}, Accumulation Mean:{np.mean(self.bdot)}, Sublimation Mean:{np.mean(self.sublim)}')
                 else:
                     self.iceout = np.mean(self.bdot) # this is the rate of ice flow advecting out of the column, units m I.E. per year.
+
         except Exception:
             print('add field "manual_iceout" to .json file to set iceout value manually')
             self.iceout = np.mean(self.bdot) # this is the rate of ice flow advecting out of the column, units m I.E. per year.
@@ -470,6 +474,9 @@ class FirnDensityNoSpin:
             ssf                 = interpolate.interp1d(input_year_snowmelt,input_snowmelt,int_type,fill_value='extrapolate')
             self.snowmelt       = ssf(self.modeltime)
             self.snowmeltSec    = self.snowmelt / S_PER_YEAR / (S_PER_YEAR/self.dt) # melt for each time step (meters i.e. per second)
+            #BUG Correcting iceout to include snowmelt.
+            # self.iceout = np.mean(self.bdot+self.snowmeltSec) # this is the rate of ice flow advecting out of the column, units m I.E. per year.
+            print(self.iceout)
             self.c['LWCheat'] = 'enthalpy' # Filler for future testing.
 
             if self.c['RAIN'] == True: ##VV use rain climatic input
@@ -1402,7 +1409,9 @@ class FirnDensityNoSpin:
         # self.dHcorr = (self.sdz_new - self.sdz_old) + self.dh_acc + self.dh_melt - (iceout_corr*self.t[iii]) # iceout has units m ice/year, t is years per time step. 
         #BUG Same as above
         # self.dHcorr = (self.sdz_new - self.sdz_old) + self.dh_acc - (iceout_corr*self.t[iii]) # iceout has units m ice/year, t is years per time step. 
-        self.dHcorr = self.z[-1] - self.z_old[-1]
+        self.dHcorr = (self.sdz_comp - self.sdz_old) + self.dh_acc + self.dh_melt - (iceout_corr*self.t[iii]) # iceout has units m ice/year, t is years per time step. 
+
+        # self.dHcorr = self.z[-1] - self.z_old[-1]
 
         self.dHAllcorr.append(self.dHcorr)
         self.dHtotcorr = np.sum(self.dHAllcorr)
