@@ -12,6 +12,7 @@ def process_results(results_filename):
     ds = ds.assign_coords(year = ('time',year_data))
     ds = ds.isel(cell=slice(1,None))
     ds['cumulative_elevation']=ds.DIP[:,6]
+    ds['FAC']=ds.DIP[:,7]
     return(ds)
 
 # %%
@@ -25,5 +26,19 @@ results_ds['cumulative_elevation'].plot.line(x='year',label='Sublim On')
 nosublim_results_ds['cumulative_elevation'].plot.line(x='year',label='Sublim Off')
 plt.legend()
 
+# %%
+results_ds['FAC'][1:].plot.line(x='year',label='Sublim On')
+nosublim_results_ds['FAC'][1:].plot.line(x='year',label='Sublim Off')
+plt.legend()
+
+# %%
+results_ds['FAC Adj'] = results_ds['FAC'] - results_ds['FAC'][1]
+nosublim_results_ds['FAC Adj'] = nosublim_results_ds['FAC'] - nosublim_results_ds['FAC'][1]
+
+# %%
+results_ds['FAC Adj'][1:].plot.line(x='year',label='FAC Sublim On')
+nosublim_results_ds['FAC Adj'][1:].plot.line(x='year',label='FAC Sublim Off')
+nosublim_results_ds['cumulative_elevation'].plot.line(x='year',label='Cum.Ele. Sublim Off')
+plt.legend()
 
 
