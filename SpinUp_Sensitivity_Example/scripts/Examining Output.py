@@ -42,3 +42,5 @@ nosublim_results_ds['cumulative_elevation'].plot.line(x='year',label='Cum.Ele. S
 plt.legend()
 
 
+
+# %%
