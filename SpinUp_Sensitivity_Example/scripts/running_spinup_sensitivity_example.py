@@ -12,6 +12,8 @@ for f in glob.glob(f'{cfm_main_path}CFMinput_example/example*'):
     df = pd.read_csv(f).T
     if 'BDOT' in f: ### increasing average value of snowfall to speedup runtime.
         df = df+1.0
+    if 'SMELT' in f: ### increasing average value of melt for interest.
+        df = df+0.1
     new_filename = f.split('/')[-1].replace('example','adjusted')
     df.T.to_csv(f'{experiment_path}CFMinput_example/{new_filename}',index=False, header=True)
 
@@ -29,6 +31,7 @@ adjusted_json['InputFileNameStrain'] = 'adjusted_STRAIN.csv'
 adjusted_json['InputFileNameIso'] = 'adjusted_ISOTOPE.csv'
 adjusted_json['InputFileNamerho'] = 'adjusted_RHOS.csv'
 adjusted_json['input_type'] = 'csv'
+
 adjusted_json['TWriteStart'] = 980.0
 adjusted_json['residual_strain'] = 0.0 
 adjusted_json['doublegrid'] =  False
