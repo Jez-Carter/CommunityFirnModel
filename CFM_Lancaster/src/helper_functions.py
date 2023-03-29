@@ -27,8 +27,8 @@ def resample_to_monthly(ds):
     ds = ds.assign_coords(year=("time", resampled_year_data))
     return(ds)
 
-def create_spin(ds, ref_period_start,ref_period_end):
-    ds_spin = ds.sel(time=slice(ref_period_start,ref_period_end))
+def create_spin(ds,ds_ref):
+    ds_spin = ds_ref.copy()
 
     time_interval = ds_spin['time'][1]-ds_spin['time'][0]
     time_shift = ds_spin['time'][-1]-ds['time'][0]

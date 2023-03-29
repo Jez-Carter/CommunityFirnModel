@@ -25,10 +25,10 @@ for station in stations:
     adjusted_json['spinFileName'] = f'Spin_{station}.hdf5'
 
     adjusted_json['physRho'] = 'KuipersMunneke2015'
-    adjusted_json['TWriteStart'] = 1860.0 
+    adjusted_json['TWriteStart'] = 1800.0 
     adjusted_json['outputs'] = ['depth','density','DIP','climate','compaction']
     adjusted_json['HbaseSpin'] = adjusted_json['H']-100
-    adjusted_json['yearSpin'] =  10#0.1
+    adjusted_json['yearSpin'] =  1
     adjusted_json['NewSpin'] = True
     adjusted_json['stpsPerYear'] =  12
     adjusted_json['MELT'] =  True 
@@ -36,12 +36,14 @@ for station in stations:
     adjusted_json['liquid'] =  "bucket" 
     adjusted_json['merging'] =  True # If a model volume gets too thin, merge it with another. Needed for numerical stability with melt schemes.
     adjusted_json['merge_min'] =  1e-9 # If merging is true, the thickness threshold at which merging should occur.
+    adjusted_json['residual_strain'] = 0.0 
     # adjusted_json['grid_outputs'] =  False
     adjusted_json['isoDiff'] =  False
     adjusted_json['iso'] =  'NoDiffusion'
     adjusted_json['GrGrowPhysics'] =  'Arthern'
     adjusted_json['physGrain'] =  True
     adjusted_json['SUBLIM'] =  False
+    adjusted_json['timesetup'] =  "exact"
 
     with open(f'{cfm_data_path}{station}.json', 'w') as json_file:
         json.dump(adjusted_json, json_file, indent=0)
