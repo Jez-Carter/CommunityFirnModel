@@ -446,7 +446,7 @@ class FirnDensityNoSpin:
                 print('Ensure that your iceout value has units m ice eq. per year!')
             else:
                 if self.c['SUBLIM']:
-                    # self.iceout = np.mean(self.bdot+self.sublim) # this is the rate of ice flow advecting out of the column, units m I.E. per year.
+                    self.iceout = np.mean(self.bdot+self.sublim) # this is the rate of ice flow advecting out of the column, units m I.E. per year.
                 #BUG
                     self.iceout = np.mean(self.bdot)#+self.sublimsec) # this is the rate of ice flow advecting out of the column, units m I.E. per year.
                     print(f'Iceout:{self.iceout}, Accumulation Mean:{np.mean(self.bdot)}, Sublimation Mean:{np.mean(self.sublim)}')
@@ -1131,8 +1131,9 @@ class FirnDensityNoSpin:
                     self.Isoz[isotope], self.Iso_sig2_z[isotope] = self.Isotopes[isotope].isoDiff(IsoParams,iii)
                 ### new box gets added on within isoDiff function
                 ####################
-
-            self.sdz_new    = np.sum(self.dz) #total column thickness after densification, melt, horizontal strain,  before new snow added
+            #BUG
+            # self.sdz_new    = np.sum(self.dz) #total column thickness after densification, melt, horizontal strain,  before new snow added
+            self.sdz_new    = np.sum(self.dzn) #total column thickness after densification, melt, horizontal strain,  before new snow added
 
             ### Dcon: user-specific code goes here. 
             # self.Dcon[self.LWC>0] = self.Dcon[self.LWC>0] + 1 # for example, keep track of how many times steps the layer has had water
@@ -1393,9 +1394,12 @@ class FirnDensityNoSpin:
         '''
         updates the surface elevation change
         '''
+        # print(np.mean(self.bdot)*self.t[iii],np.mean(self.bdot+self.sublim)*self.t[iii])
+        # print((self.sdz_new - self.sdz_old),self.dh_acc,self.dh_melt,-self.iceout*self.t[iii])
         #BUG I think the below is wrong so I've commented and replaced.
-        self.dH     = (self.sdz_new - self.sdz_old) + self.dh_acc + self.dh_melt - (self.iceout*self.t[iii]) # iceout has units m ice/year, t is years per time step. 
-        # self.dH     = (self.sdz_new - self.sdz_old) + self.dh_acc - (self.iceout*self.t[iii])# + self.dh_melt - (self.iceout*self.t[iii]) # iceout has units m ice/year, t is years per time step. 
+        self.iceout = np.mean(self.bdot+self.sublim)
+        # self.dH     = (self.sdz_new - self.sdz_old) + self.dh_acc + self.dh_melt - (self.iceout*self.t[iii]) # iceout has units m ice/year, t is years per time step. 
+        self.dH     = (self.sdz_new - self.sdz_old) + self.dh_acc - (self.iceout*self.t[iii])# + self.dh_melt - (self.iceout*self.t[iii]) # iceout has units m ice/year, t is years per time step. 
         # self.dH = self.z[-1] - self.z_old[-1] #- (self.iceout*self.t) # alternative method. Should be the same?    
         # self.dH2 = self.z[-1] - self.z_old[-1] #- (self.iceout*self.t) # alternative method. Should be the same?    
         self.dHAll.append(self.dH)
@@ -1408,8 +1412,8 @@ class FirnDensityNoSpin:
         iceout_corr = self.iceout*RHO_I/self.rho[-1]
         # self.dHcorr = (self.sdz_new - self.sdz_old) + self.dh_acc + self.dh_melt - (iceout_corr*self.t[iii]) # iceout has units m ice/year, t is years per time step. 
         #BUG Same as above
-        # self.dHcorr = (self.sdz_new - self.sdz_old) + self.dh_acc - (iceout_corr*self.t[iii]) # iceout has units m ice/year, t is years per time step. 
-        self.dHcorr = (self.sdz_comp - self.sdz_old) + self.dh_acc + self.dh_melt - (iceout_corr*self.t[iii]) # iceout has units m ice/year, t is years per time step. 
+        self.dHcorr = (self.sdz_new - self.sdz_old) + self.dh_acc - (iceout_corr*self.t[iii]) # iceout has units m ice/year, t is years per time step. 
+        # self.dHcorr = (self.sdz_comp - self.sdz_old) + self.dh_acc + self.dh_melt - (iceout_corr*self.t[iii]) # iceout has units m ice/year, t is years per time step. 
 
         # self.dHcorr = self.z[-1] - self.z_old[-1]
 
