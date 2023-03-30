@@ -12,7 +12,7 @@ ds = resample_to_monthly(ds)
 
 start_time,end_time = '1960-01-01', '2016-12-31'
 ref_period_start,ref_period_end = '1960-01-01', '1980-01-01'
-repeated_spinups = 20# 5 repeated spinups of 20 years would be 100years of spinup 
+repeated_spinups = 30# 5 repeated spinups of 20 years would be 100years of spinup 
 
 ds = ds.sel(time=slice(start_time,end_time))
 ds_ref = ds.sel(time=slice(ref_period_start,ref_period_end))
